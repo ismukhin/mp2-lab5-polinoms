@@ -13,7 +13,11 @@ public:
 
 	Polinom():list() {}
 
-	Polinom(std::vector<std::pair<T, size_t>> coeff): list(coeff){}
+	Polinom(std::vector<std::pair<T, size_t>> coeff): list(coeff){
+		this->sort();
+		this->remove_equal_degrees();
+		this->remove_null_elem();
+	}
 
 	Polinom(Node* a):list(a){}
 
@@ -93,6 +97,27 @@ public:
 		}
 	}
 
+	void remove_null_elem() {
+		auto tmp = this->begin();
+		auto it1 = ++this->begin();
+		while (it1.get_node() != nullptr) {
+			if (it1.get_node()->elem == 0) {
+				it1 = this->erase_after(tmp);
+				tmp++;
+			}
+			else {
+				it1++;
+				tmp++;
+			}
+		}
+		if (this->begin().get_node()->elem == 0) {
+			Node* tmp1 = this->begin().get_node();
+			this->first = this->begin().get_node()->next;
+			delete tmp1;
+			size--;
+		}
+	}
+
 	void remove_equal_degrees() {
 		auto tmp = this->begin();
 		auto it1 = ++this->begin();
@@ -109,10 +134,9 @@ public:
 	}
 
 	friend Polinom operator+(Polinom a, Polinom b) {
-		a.sort();
-		b.sort();
 		a.merge_sort(b);
 		a.remove_equal_degrees();
+		a.remove_null_elem();
 		return a;
 	}
 

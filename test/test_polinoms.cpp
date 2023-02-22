@@ -41,36 +41,100 @@ TEST(Polinom, can_get_z) {
 	EXPECT_EQ(5, get_z(p.in_pos(0)));
 }
 
-TEST(Polinom, can_sum_two_polinoms) {
+TEST(Polinom, can_sum_two_polinoms_1) {
+	std::vector<std::pair<int, size_t>> ab;
+	ab.push_back(std::make_pair(1, 233));
+	ab.push_back(std::make_pair(-1, 233));
+	ab.push_back(std::make_pair(3, 1));
+
+	std::vector<std::pair<int, size_t>> bc;
+	bc.push_back(std::make_pair(-3, 1));
+	bc.push_back(std::make_pair(-9, 154));
+	bc.push_back(std::make_pair(9, 154));
+	
+
+	std::vector<std::pair<int, size_t>> res_1;
+	res_1.push_back(std::make_pair(6, 1));
+
+	Polinom<int> a(ab);
+	
+	Polinom<int> c(bc);
+	
+	EXPECT_EQ(nullptr, (a + c).first);
+}
+
+TEST(Polinom, can_sum_two_polinoms_2) {
 	std::vector<std::pair<int, size_t>> a_1;
 	a_1.push_back(std::make_pair(1, 233));
-	a_1.push_back(std::make_pair(2, 1));
+	a_1.push_back(std::make_pair(1, 233));
 	a_1.push_back(std::make_pair(3, 1));
+	a_1.push_back(std::make_pair(7, 1));
 
 	std::vector<std::pair<int, size_t>> b_1;
-	b_1.push_back(std::make_pair(-5, 66));
-	b_1.push_back(std::make_pair(10, 154));
-	b_1.push_back(std::make_pair(8, 154));
+	b_1.push_back(std::make_pair(-3, 1));
+	b_1.push_back(std::make_pair(9, 154));
+	b_1.push_back(std::make_pair(9, 154));
+
+
+	std::vector<std::pair<int, size_t>> res_1;
+	res_1.push_back(std::make_pair(2, 233));
+	res_1.push_back(std::make_pair(7, 1));
+	res_1.push_back(std::make_pair(18, 154));
 
 	Polinom<int> a(a_1);
 	Polinom<int> b(b_1);
-	
+	Polinom<int> res(res_1);
+	Polinom<int> my_res(a + b);
+
+	for (auto it1 = res.begin(), it2 = my_res.begin(); it1 != res.end(); it1++, it2++) {
+		EXPECT_EQ(it1.get_node()->elem, it2.get_node()->elem);
+	}
 }
 
-TEST(Polinom, can_sub_two_polinoms) {
+TEST(Polinom, can_sub_two_polinoms_1) {
 	std::vector<std::pair<int, size_t>> ab;
 	ab.push_back(std::make_pair(1, 233));
 	ab.push_back(std::make_pair(2, 1));
 	ab.push_back(std::make_pair(3, 1));
 
 	std::vector<std::pair<int, size_t>> ac;
-	ac.push_back(std::make_pair(-5, 66));
-	ac.push_back(std::make_pair(10, 154));
-	ac.push_back(std::make_pair(8, 154));
+	ac.push_back(std::make_pair(1, 233));
+	ac.push_back(std::make_pair(2, 1));
+	ac.push_back(std::make_pair(3, 1));
 
 	Polinom<int> a(ab);
 	Polinom<int> b(ac);
-	
+	Polinom<int> res(a - b);
+
+	EXPECT_EQ(nullptr, res.first);
+}
+
+TEST(Polinom, can_sub_two_polinoms_2) {
+	std::vector<std::pair<int, size_t>> a_1;
+	a_1.push_back(std::make_pair(1, 233));
+	a_1.push_back(std::make_pair(1, 233));
+	a_1.push_back(std::make_pair(3, 1));
+	a_1.push_back(std::make_pair(7, 1));
+
+	std::vector<std::pair<int, size_t>> b_1;
+	b_1.push_back(std::make_pair(-3, 1));
+	b_1.push_back(std::make_pair(9, 154));
+	b_1.push_back(std::make_pair(9, 154));
+
+
+	std::vector<std::pair<int, size_t>> res_1;
+	res_1.push_back(std::make_pair(2, 233));
+	res_1.push_back(std::make_pair(13, 1));
+	res_1.push_back(std::make_pair(-18, 154));
+
+	Polinom<int> a(a_1);
+	Polinom<int> b(b_1);
+	Polinom<int> res(res_1);
+	Polinom<int> my_res(a - b);
+
+	for (auto it1 = res.begin(), it2 = my_res.begin(); it1 != res.end(); it1++, it2++) {
+		EXPECT_EQ(it1.get_node()->elem, it2.get_node()->elem);
+	}
 }
 
 TEST(Polinom, can_mult_two_polinoms) {
@@ -86,5 +150,6 @@ TEST(Polinom, can_mult_two_polinoms) {
 
 	Polinom<int> a(ab);
 	Polinom<int> b(ac);
+
 	
 }
