@@ -22,8 +22,10 @@ include_directories("${MP2_INCLUDE}" gtest)
 
 # BUILD
 add_subdirectory(src)
-add_subdirectory(gtest)
 add_subdirectory(test)
+add_subdirectory(3rdparty/googletest)
+
+include_directories(3rdparty/googletest/googletest/include)
 
 # REPORT
 message( STATUS "")
