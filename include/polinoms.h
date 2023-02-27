@@ -162,18 +162,29 @@ public:
 		return v;
 	}
 
-	size_t in_point(size_t& x, size_t& y, size_t& z) {
-		size_t res;
+	size_t in_point(size_t x, size_t y, size_t z) {
+		size_t res = 0;
 		for (auto it1 = this->begin(); it1 != this->end(); it1++) {
-			res = (it1.get_node()->elem) * (pow(x, get_x(it1)) * (pow(y, get_y(it1)) * (pow(z, get_z(it1));
+			res += (it1.get_node()->elem) * (pow(x, get_x(it1))) * (pow(y, get_y(it1))) * (pow(z, get_z(it1)));
 		}
 		return res;
 	}
 
-	Polinom diff(char& a) {
+	bool operator==(const Polinom<T>& b) {
+		bool res = true;
+		for (auto it1 = this->begin(), auto it2 = b.begin(); it1 != this->end(), it2 != b.end(); it1++, it2++) {
+			if ((it1.get_node()->elem != it2.get_node()->elem) || (get_x(it1) != get_x(it2)) || (get_y(it1) != get_y(it2)) || (get_z(it1) != get_z(it2))) {
+				res = false;
+				break;
+			}
+		}
+		return res;
+	}
+
+	Polinom diff(char a) {
 		Polinom res;
-		size_t tmp1;
-		size_t tmp 2;
+		size_t tmp1 = 0;
+		size_t tmp2 = 0;
 		auto res_it = res.begin();
 		for (auto it1 = this->begin(); it1 != this->end(); it1++) {
 			switch (a) {
@@ -192,13 +203,16 @@ public:
 			res.insert_after(res_it, it1.get_node()->elem * tmp1, tmp2);
 			res_it++;
 		}
+		Node* tmp = res.first;
+		res.first = res.first->next;
+		delete tmp;
 		return res;
 	}
 
-	Polinom integ(char& a) {
+	Polinom integ(char a) {
 		Polinom res;
 		double tmp1;
-		size_t tmp 2;
+		size_t tmp2;
 		auto res_it = res.begin();
 		for (auto it1 = this->begin(); it1 != this->end(); it1++) {
 			switch (a) {
@@ -217,6 +231,9 @@ public:
 			res.insert_after(res_it, it1.get_node()->elem * tmp1, tmp2);
 			res_it++;
 		}
+		Node* tmp = res.first;
+		res.first = res.first->next;
+		delete tmp;
 		return res;
 	}
 };
