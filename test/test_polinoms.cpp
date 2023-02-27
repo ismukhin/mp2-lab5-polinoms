@@ -1,5 +1,5 @@
 #include "polinoms.h" 
-#include <gtest.h>
+#include "gtest/gtest.h"
 
 TEST(Polinom, can_create_polinom_without_parametrs) {
 	ASSERT_NO_THROW(Polinom<int> p);
