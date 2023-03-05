@@ -175,6 +175,7 @@ public:
 		this->first = tmp;
 		l.first = nullptr;
 		l.size = 0;
+		return *this;
 	};
 
 	size_t get_size() {

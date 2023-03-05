@@ -153,3 +153,95 @@ TEST(Polinom, can_mult_two_polinoms) {
 
 	
 }
+
+TEST(Polinom, can_mult_with_constant_right) {
+	std::vector<std::pair<int, size_t>> ab;
+	ab.push_back(std::make_pair(1, 233));
+	ab.push_back(std::make_pair(2, 1));
+	ab.push_back(std::make_pair(3, 1));
+	Polinom<int> a(ab);
+
+	std::vector<std::pair<int, size_t>> ac;
+	ac.push_back(std::make_pair(3, 233));
+	ac.push_back(std::make_pair(6, 1));
+	ac.push_back(std::make_pair(9, 1));
+	Polinom<int> b(ac);
+	Polinom<int> res(a * 3);
+	for (auto it1 = res.begin(), it2 = b.begin(); it1 != res.end(); it1++, it2++) {
+		EXPECT_EQ(it1.get_node()->elem, it2.get_node()->elem);
+	}
+	
+}
+
+TEST(Polinom, can_mult_with_constant_left) {
+	std::vector<std::pair<int, size_t>> ab;
+	ab.push_back(std::make_pair(1, 233));
+	ab.push_back(std::make_pair(2, 1));
+	ab.push_back(std::make_pair(3, 1));
+	Polinom<int> a(ab);
+
+	std::vector<std::pair<int, size_t>> ac;
+	ac.push_back(std::make_pair(3, 233));
+	ac.push_back(std::make_pair(6, 1));
+	ac.push_back(std::make_pair(9, 1));
+	Polinom<int> b(ac);
+	Polinom<int> res(3 * a);
+	for (auto it1 = res.begin(), it2 = b.begin(); it1 != res.end(); it1++, it2++) {
+		EXPECT_EQ(it1.get_node()->elem, it2.get_node()->elem);
+	}
+
+}
+
+TEST(Polinom, can_mult_with_null_constant_left) {
+	std::vector<std::pair<int, size_t>> ab;
+	ab.push_back(std::make_pair(1, 233));
+	ab.push_back(std::make_pair(2, 1));
+	ab.push_back(std::make_pair(3, 1));
+	Polinom<int> a(ab);
+
+	Polinom<int> res(0 * a);
+	EXPECT_EQ(nullptr, res.first);
+
+}
+
+TEST(Polinom, can_mult_with_null_constant_right) {
+	std::vector<std::pair<int, size_t>> ab;
+	ab.push_back(std::make_pair(1, 233));
+	ab.push_back(std::make_pair(2, 1));
+	ab.push_back(std::make_pair(3, 1));
+	Polinom<int> a(ab);
+
+	Polinom<int> res(a * 0);
+	EXPECT_EQ(nullptr, res.first);
+
+}
+
+TEST(Polinom, can_div_with_constant_right) {
+	std::vector<std::pair<int, size_t>> ab;
+	ab.push_back(std::make_pair(20, 233));
+	ab.push_back(std::make_pair(15, 1));
+	ab.push_back(std::make_pair(10, 1));
+	Polinom<int> a(ab);
+
+	std::vector<std::pair<int, size_t>> ac;
+	ac.push_back(std::make_pair(4, 233));
+	ac.push_back(std::make_pair(3, 1));
+	ac.push_back(std::make_pair(2, 1));
+	Polinom<int> b(ac);
+	Polinom<int> res(a / 5);
+	for (auto it1 = res.begin(), it2 = b.begin(); it1 != res.end(); it1++, it2++) {
+		EXPECT_EQ(it1.get_node()->elem, it2.get_node()->elem);
+	}
+
+}
+
+TEST(Polinom, cant_div_with_null_constant) {
+	std::vector<std::pair<int, size_t>> ab;
+	ab.push_back(std::make_pair(20, 233));
+	ab.push_back(std::make_pair(15, 1));
+	ab.push_back(std::make_pair(10, 1));
+	Polinom<int> a(ab);
+
+	ASSERT_ANY_THROW(a / 0);
+
+}
