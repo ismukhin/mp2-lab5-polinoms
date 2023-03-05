@@ -22,6 +22,7 @@ add_subdirectory(test)
 add_subdirectory(3rdparty/googletest)
 
 include_directories(3rdparty/googletest/googletest/include)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 # REPORT
 message( STATUS "")
