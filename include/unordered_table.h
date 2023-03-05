@@ -2,15 +2,15 @@
 #include "polinoms.h"
 
 template <class T, class V>
-class chaos_table {
+class unordered_table {
 
 	std::vector<std::pair<T, V>> data;
 
 public:
 
-	chaos_table() {}
+	unordered_table() {}
 
-	chaos_table(T key, V val) {
+	unordered_table(T key, V val) {
 		data.push_back(std::make_pair(key, val));
 	}
 
