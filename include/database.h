@@ -3,6 +3,7 @@
 #include <utility>
 #include <algorithm>
 #include "polinoms.h"
+#include "list.h"
 
 #pragma once
 
@@ -27,12 +28,16 @@ public:
     void insert(int key, const Polinom<T>& value) {
         auto it = findloc(key);
         data.insert(it, std::make_pair(key, value));
+        ++size;
     }
 
     void remove(int key) {
         auto it = findloc(key);
         if (it != data.end()) {
             data.erase(it);
+        }
+        else {
+            throw "Error";
         }
     }
 
