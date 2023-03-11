@@ -173,4 +173,15 @@ public:
 		res.remove_equal_degrees();
 		return res;
 	}
+
+	friend bool operator==(Polinom& a, Polinom& b) {
+		bool res = true;
+		for (auto it1 = a.begin(), it2 = b.begin(); it1 != a.end(), it2 != b.end(); it1++, it2++) {
+			if ((it1.get_node()->elem != it2.get_node()->elem) || (get_x(it1) != get_x(it2)) || (get_y(it1) != get_y(it2)) || (get_z(it1) != get_z(it2))) {
+				res = false;
+				break;
+			}
+		}
+		return res;
+	}
 };
