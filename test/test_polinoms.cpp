@@ -100,20 +100,38 @@ TEST(Polinom, can_count_in_point) {
 	EXPECT_EQ(231, a.in_point(1, 2, 3));
 }
 
-//TEST(Polinom, can_diff_polinom_x) {
-//	std::vector<std::pair<int, size_t>> ab;
-//	ab.push_back(std::make_pair(1, 233));
-//	ab.push_back(std::make_pair(2, 301));
-//	ab.push_back(std::make_pair(3, 599));
-//
-//	Polinom<int> a(ab);
-//
-//	std::vector<std::pair<int, size_t>> ac;
-//	ac.push_back(std::make_pair(2, 133));
-//	ac.push_back(std::make_pair(6, 201));
-//	ac.push_back(std::make_pair(15, 499));
-//
-//	Polinom<int> b(ac);
-//
-//	EXPECT_EQ(a, b);
-//}
+TEST(Polinom, can_diff_polinom_x) {
+	std::vector<std::pair<int, size_t>> ab;
+	ab.push_back(std::make_pair(1, 233));
+	ab.push_back(std::make_pair(2, 301));
+	ab.push_back(std::make_pair(3, 599));
+
+	Polinom<int> a(ab);
+
+	std::vector<std::pair<int, size_t>> ac;
+	ac.push_back(std::make_pair(2, 133));
+	ac.push_back(std::make_pair(6, 201));
+	ac.push_back(std::make_pair(15, 499));
+
+	Polinom<int> b(ac);
+
+	EXPECT_EQ(true, a.diff('x') == b);
+}
+
+TEST(Polinom, can_integ_polinom_x) {
+	std::vector<std::pair<int, size_t>> ab;
+	ab.push_back(std::make_pair(1, 233));
+	ab.push_back(std::make_pair(2, 301));
+	ab.push_back(std::make_pair(3, 599));
+
+	Polinom<int> a(ab);
+
+	std::vector<std::pair<int, size_t>> ac;
+	ac.push_back(std::make_pair(2, 133));
+	ac.push_back(std::make_pair(6, 201));
+	ac.push_back(std::make_pair(15, 499));
+
+	Polinom<int> b(ac);
+
+	EXPECT_EQ(true, b.integ('x') == a);
+}
