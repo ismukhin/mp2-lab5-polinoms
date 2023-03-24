@@ -271,7 +271,7 @@ public:
     RedBlackTree() : root(nullptr) {};
 
     void insert(T key, V value) {
-       Node* z = newNode(key, Color::RED, value);
+       Node* z = new Node(key, Color::RED, value);
        Node* y = nullptr;
        Node* x = root;
 
