@@ -174,25 +174,36 @@ public:
 		return res;
 	}
 
-	void remove_null_elem() {
-		auto tmp = this->begin();
-		auto it1 = ++this->begin();
-		while (it1.get_node() != nullptr) {
-			if (it1.get_node()->elem == 0) {
-				it1 = this->erase_after(tmp);
-				tmp++;
-			}
-			else {
-				it1++;
-				tmp++;
-			}
+	friend Polinom operator*(Polinom a, T c) {
+		if (c == 0) {
+			Polinom res;
+			Node* tmp = res.first;
+			res.first = res.first->next;
+			delete tmp;
+			res.size--;
+			return res;
 		}
-		if (this->begin().get_node()->elem == 0) {
-			Node* tmp1 = this->begin().get_node();
-			this->first = this->begin().get_node()->next;
-			delete tmp1;
-			size--;
+		Polinom res = std::move(a);
+		for (auto it1 = res.begin(); it1 != res.end(); it1++) {
+			it1.get_node()->elem *= c;
 		}
+		return res;
+	}
+
+	friend Polinom operator*(T c, Polinom a) {
+
+		return a * c;
+	}
+
+	friend Polinom operator/(Polinom a, T c) {
+		if (c == 0) {
+			throw std::out_of_range("Division by zero!");
+		}
+		Polinom res = std::move(a);
+		for (auto it1 = res.begin(); it1 != res.end(); it1++) {
+			it1.get_node()->elem /= c;
+		}
+		return res;
 	}
 
 	size_t pow(size_t b, size_t e) {
@@ -283,4 +294,5 @@ public:
 		res.remove_null_elem();
 		return res;
 	}
+
 };

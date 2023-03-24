@@ -168,14 +168,15 @@ public:
 		return *this;
 	};
 
-	//list& operator=(list&& l) {
-	//	this->clear();
-	//	this->size = l.size;
-	//	Node* tmp = l.first;
-	//	this->first = tmp;
-	//	l.first = nullptr;
-	//	l.size = 0;
-	//};
+	list& operator=(list&& l) {
+		this->clear();
+		this->size = l.size;
+		Node* tmp = l.first;
+		this->first = tmp;
+		l.first = nullptr;
+		l.size = 0;
+		return *this;
+	};
 
 	size_t get_size() {
 		return size;
