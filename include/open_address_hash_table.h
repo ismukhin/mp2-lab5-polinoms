@@ -67,7 +67,6 @@ public:
 				break;
 			}
 			else if (data[num_of_cell].key == key) {
-				j++;
 				break;
 			}
 			else if (data[num_of_cell].key != key) {
