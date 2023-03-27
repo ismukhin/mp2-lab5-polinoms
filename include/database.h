@@ -2,6 +2,8 @@
 #include <vector>
 #include <utility>
 #include <algorithm>
+#include <forward_list>
+#include <functional>
 #include "polinoms.h"
 #include "list.h"
 
@@ -300,7 +302,7 @@ public:
     void remove(T key) {
        Node* z = findNode(key);
         if (z == nullptr) {
-            return;
+            throw "Error";
         }
        Node* x;
        Node* y = z;
@@ -338,5 +340,57 @@ public:
 
     void print() {
         printHelper(root);
+    }
+};
+
+template <typename V>
+
+class HashTableChain {
+
+private:
+
+    std::vector<std::forward_list<std::pair<int, V>>> table;
+
+    size_t hashFunction(int key) {
+        return key % table.size();
+    }
+
+public:
+
+    HashTableChain(size_t capacity = 128) : table(capacity) {}
+
+    void insert(int key, V& value) {
+        size_t index = hashFunction(key);
+        for (auto& node : table[index]) {
+            if (node.first == key) {
+                node.second = value;
+                return;
+            }
+        }
+        table[index].push_front(std::make_pair(key, value));
+    }
+
+    bool find(int key, V& value) {
+        size_t index = hashFunction(key);
+        for (auto& node : table[index]) {
+            if (node.first == key) {
+                value = node.second;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void remove(int key) {
+        size_t index = hashFunction(key);
+        auto& bucket = table[index];
+        auto prev = bucket.before_begin();
+        for (auto iter = bucket.begin(); iter != bucket.end(); ++iter, ++prev) {
+            if (iter->first == key) {
+                bucket.erase_after(prev);
+                return;
+            }
+        }
+        throw "Error";
     }
 };
