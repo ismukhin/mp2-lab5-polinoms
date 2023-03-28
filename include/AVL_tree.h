@@ -10,7 +10,7 @@ class AVL_tree {
 		V value;
 		Node* left;
 		Node* right;
-		size_t height;
+		int height;
 
 		Node() {};
 
@@ -81,10 +81,9 @@ class AVL_tree {
 	}
 
 	Node* eraseMax(Node* tl) {
-		if (tl->right)
-			tl->right = eraseMax(tl->right);
-		else
+		if (tl->right == nullptr)
 			return tl->left;
+		tl->right = eraseMax(tl->right);
 		return balance(tl);
 	}
 
@@ -98,24 +97,14 @@ class AVL_tree {
 			t->right = erase_(key_, t->right);
 		}
 		else {
-			//if (t->left == nullptr && t->right != nullptr) {
-			//	Node* right = t->right;
-			//	delete t;
-			//	return balance(right);
-			//}
-			//if (t->left == nullptr && t->right == nullptr) {
-			//	delete t;
-			//	return nullptr;
-			//}
-			//Node* max = findMax(t->left);
 			Node* left = t->left;
 			Node* right = t->right;
 			delete t;
 			if (!left)
 				return right;
 			Node* max = findMax(left);
-			max->right = right;
 			max->left = eraseMax(left);
+			max->right = right;
 			return balance(max);
 		}
 		return balance(t);
@@ -171,22 +160,18 @@ public:
 		print_(this->root);
 	}
 
-	size_t height(Node* t) {
-		//if (t != nullptr)
-		//	return t->height;
-		//else
-		//	return 0;
+	int height(Node* t) {
 		return t ? t->height : 0;
 	}
 
-	size_t bfact(Node* t) {
+	int bfact(Node* t) {
 		return height(t->right) - height(t->left);
 	}
 
 	void fix_height(Node* t) {
 
-		size_t hl = height(t->left);
-		size_t hr = height(t->right);
+		int hl = height(t->left);
+		int hr = height(t->right);
 		t->height = (hl > hr ? hl : hr) + 1;
 	}
 

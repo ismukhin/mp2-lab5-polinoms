@@ -6,7 +6,7 @@ TEST(tree, smth) {
 	std::vector<int> pr({9, 1, 2, 15, 18, 10, 30, 27});
 	for (int i = 0; i < pr.size(); i++) {
 		tr.insert(pr[i], 1);
-		tr.print();
+		//tr.print();
 		std::cout << std::endl;
 		std::cout << "Root = " << tr.root->key << std::endl;
 	}
@@ -14,6 +14,8 @@ TEST(tree, smth) {
 	tr.print();
 	std::cout << std::endl;
 	std::cout << "Root = " << tr.root->key << std::endl;
+	std::cout << std::endl;
+	//std::cout << "Root = " << tr.root->key << std::endl;
 	tr.erase(1);
 	tr.print();
 	std::cout << std::endl;
@@ -26,4 +28,20 @@ TEST(tree, smth) {
 	tr.print();
 	std::cout << std::endl;
 	std::cout << "Root = " << tr.root->key <<std::endl;
+	tr.erase(18);
+	tr.print();
+	std::cout << std::endl;
+	std::cout << "Root = " << tr.root->key << std::endl;
+	tr.erase(10);
+	tr.print();
+	std::cout << std::endl;
+	std::cout << "Root = " << tr.root->key << std::endl;
+	tr.erase(30);
+	tr.print();
+	std::cout << std::endl;
+	std::cout << "Root = " << tr.root->key << std::endl;
+	tr.erase(27);
+	//tr.print();
+	//std::cout << std::endl;
+	//std::cout << "Root = " << tr.root->key << std::endl;
 }
