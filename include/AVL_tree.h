@@ -42,17 +42,15 @@ class AVL_tree {
 
 	Node* find_(T key, Node* root) {
 		if (!root) {
-			return nullptr;
-		}
-		else if (root->key == key_) {
 			return root;
 		}
-		else if (root->key > key_) {
-			root->left = insert_(key_, value_, root->left);
+		else if (root->key > key) {
+			return find_(key, root->left);
 		}
-		else if (root->key < key_) {
-			root->right = insert_(key_, value_, root->right);
+		else if (root->key < key) {
+			return find_(key, root->right);
 		}
+		return root;
 	}
 
 	Node* rotateright(Node* t){
@@ -110,13 +108,13 @@ class AVL_tree {
 		return balance(t);
 	}
 
-	void print_(Node* current) {
+	friend std::ostream& help_print(std::ostream& obj, Node* current) {
 		if (current != nullptr) {
-			print_(current->left);
-			std::cout << current->key << " ";
-			print_(current->right);
+			help_print(obj, current->left);
+			obj << current->key << " : " << current->value << std::endl;
+			help_print(obj, current->right);
 		}
-
+		return obj;
 	}
 
 	Node* balance(Node* t) {
@@ -136,30 +134,6 @@ class AVL_tree {
 		return t;
 	}
 
-public:
-
-	Node* root;
-
-	AVL_tree() {
-		root = nullptr;
-	};
-
-	void insert(T key_, V value_) {
-		this->root = insert_(key_, value_, this->root);
-	}
-
-	Node* find(T key) {
-		return find_(key, this->root);
-	}
-
-	void erase(T key_) {
-		this->root = erase_(key_, this->root);
-	}
-
-	void print() {
-		print_(this->root);
-	}
-
 	int height(Node* t) {
 		return t ? t->height : 0;
 	}
@@ -173,6 +147,36 @@ public:
 		int hl = height(t->left);
 		int hr = height(t->right);
 		t->height = (hl > hr ? hl : hr) + 1;
+	}
+
+public:
+
+	Node* root;
+
+	AVL_tree() {
+		root = nullptr;
+	};
+
+	void insert(T key_, V value_) {
+		this->root = insert_(key_, value_, this->root);
+	}
+
+	V& operator[](T key) {
+		Node* tmp = find_(key, this->root);
+		if (tmp) {
+			return tmp->value;
+		}
+		else {
+			throw std::out_of_range("Tree hasn't this key");
+		}
+	}
+
+	void erase(T key_) {
+		this->root = erase_(key_, this->root);
+	}
+
+	friend std::ostream& operator<<(std::ostream& obj, AVL_tree& tr) {
+		return help_print(obj, tr.root);
 	}
 
 };
