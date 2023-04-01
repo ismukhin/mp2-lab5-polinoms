@@ -1,5 +1,6 @@
 #include <vector>
 #include <string>
+#include <cmath>
 
 template <class V>
 class HashTable_OpAdd {
@@ -45,24 +46,42 @@ public:
 		return data.size();
 	}
 
+	size_t get_count_of_busy_cells() {
+		return count_of_busy_cells;
+	}
+
 	size_t Hash(std::string key) {
 		size_t res = 0;
+		size_t x = 7;
 		for (int i = 0; i < key.size(); i++) {
-			res += key[i] - '0';
+			res += (key[i] - '0') * pow(x, key.size() - i);
 		}
 		return res % data.size();
 	}
 
+	void repacking() {
+		std::vector<Cell> copy = data;
+		data.clear();
+		data.resize(2 * copy.size());
+		count_of_busy_cells = 0;
+		for (int i = 0; i < copy.size(); i++) {
+			insert(copy[i].key, copy[i].val);
+		}
+	}
+
 	void insert(std::string key, V val) {
+		if (key == "")
+			throw std::out_of_range("Empty string can't be a key");
 		size_t j = 0;
 		size_t num_of_cell;
 		if (data.size() == count_of_busy_cells) {
-			data.resize(2 * data.size());
+			repacking();
 		}
 		while (true) {
 			num_of_cell = (Hash(key) + c * j + d * j * j) % data.size();
 			if (data[num_of_cell].key == "") {
 				data[num_of_cell].add(key, val);
+				data[num_of_cell].is_del = false;
 				count_of_busy_cells++;
 				break;
 			}
@@ -77,26 +96,26 @@ public:
 	}
 
 	V& operator[](std::string key_) {
+		if (key_ == "")
+			throw std::out_of_range("Empty string can't be a key");
 		size_t j = 0;
-		size_t i = 0;
 		size_t num_of_cell;
 		if (count_of_busy_cells == 0) {
 			throw std::out_of_range("Table is empty");
 		}
 		while (true) {
 			num_of_cell = (Hash(key_) + c * j + d * j * j) % data.size();
-			if (data[num_of_cell].key == "") {
+			if (data[num_of_cell].key == "" && data[num_of_cell].is_del == true) {
 				j++;
 				continue;
+			}
+			else if (data[num_of_cell].key == "" && data[num_of_cell].is_del == false) {
+				throw std::out_of_range("Table hasn't this key");
 			}
 			else if (data[num_of_cell].key == key_) {
 				return data[num_of_cell].val;
 			}
 			else if (data[num_of_cell].key != key_) {
-				i++;
-				if (i == count_of_busy_cells) {
-					throw std::out_of_range("Table hasn't this key");
-				}
 				j++;
 				continue;
 			}
@@ -108,14 +127,18 @@ public:
 	}
 
 	void erase(std::string key_) {
+		if (key_ == "")
+			throw std::out_of_range("Empty string can't be a key");
 		size_t j = 0;
-		size_t i = 0;
 		size_t num_of_cell;
 		while (true) {
 			num_of_cell = (Hash(key_) + c * j + d * j * j) % data.size();
-			if (data[num_of_cell].key == "") {
+			if (data[num_of_cell].key == "" && data[num_of_cell].is_del == true) {
 				j++;
 				continue;
+			}
+			else if (data[num_of_cell].key == "" && data[num_of_cell].is_del == false) {
+				throw std::out_of_range("Table hasn't this key");
 			}
 			else if (data[num_of_cell].key == key_) {
 				data[num_of_cell].val = NULL;
@@ -125,10 +148,6 @@ public:
 				break;
 			}
 			else if (data[num_of_cell].key != key_) {
-				i++;
-				if (i == count_of_busy_cells) {
-					throw std::out_of_range("Table hasn't this key");
-				}
 				j++;
 				continue;
 			}
@@ -137,7 +156,9 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& print, HashTable_OpAdd& Tbl) {
 		for (int i = 0; i < Tbl.data.size(); i++) {
-			print << Tbl.data[i].key << " : " << Tbl.data[i].val << std::endl;
+			if (Tbl.data[i].key != "") {
+				print << Tbl.data[i].key << " : " << Tbl.data[i].val << std::endl;
+			}
 		}
 		return print;
 	}

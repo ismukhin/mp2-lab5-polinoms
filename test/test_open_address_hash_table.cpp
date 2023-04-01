@@ -33,6 +33,21 @@ TEST(HashTable_OpAdd, can_erase_key) {
 	ASSERT_NO_THROW(tbl.erase("Hello, world!"));
 }
 
+TEST(HashTable_OpAdd, cant_erase_if_table_is_empty) {
+	HashTable_OpAdd<int> tbl;
+	ASSERT_ANY_THROW(tbl.erase("1"));
+}
+
+TEST(HashTable_OpAdd, cant_find_empty_string) {
+	HashTable_OpAdd<int> tbl;
+	ASSERT_ANY_THROW(tbl[""]);
+}
+
+TEST(HashTable_OpAdd, cant_insert_empty_string) {
+	HashTable_OpAdd<int> tbl;
+	ASSERT_ANY_THROW(tbl.insert("", 2));
+}
+
 TEST(HashTable_OpAdd, erase_really_erase) {
 	HashTable_OpAdd<int> tbl;
 	tbl.insert("Hello, world!", 2);
@@ -51,14 +66,6 @@ TEST(HashTable_OpAdd, can_resize_if_table_is_full) {
 
 	tbl.insert("e", 5);
 	EXPECT_EQ(tbl.size(), 8);
-}
-
-TEST(HashTable_OpAdd, can_resolve_simple_collusion) {
-	HashTable_OpAdd<int> tbl;
-	tbl.insert("a", 1); //hash = 1
-	tbl.insert("C++", 2); //hash = 1, but on the third iteration with square probs result of the func is 3
-	EXPECT_EQ(tbl[3], 2);
-	
 }
 
 TEST(HashTable_OpAdd, many_pushes_and_erases_into_table) {
@@ -81,7 +88,7 @@ TEST(HashTable_OpAdd, many_pushes_and_erases_into_table) {
 	for (int i = 0; i < exmpls.size(); i++) {
 		tbl.erase(exmpls[i]);
 	}
-
+	EXPECT_EQ(0, tbl.get_count_of_busy_cells());
 }
 
 TEST(HashTable_OpAdd, a_lot_of_collusion) {
