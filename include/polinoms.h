@@ -183,7 +183,27 @@ public:
 		return res;
 	}
 
-	friend bool operator==(Polinom& a, Polinom& b) {
+	size_t pow(size_t b, size_t e) {
+		size_t v = 1;
+		while (e != 0) {
+			if ((e & 1) != 0) {
+				v *= b;
+			}
+			b *= b;
+			e >>= 1;
+		}
+		return v;
+	}
+
+	size_t in_point(size_t x, size_t y, size_t z) {
+		size_t res = 0;
+		for (auto it1 = this->begin(); it1 != this->end(); it1++) {
+			res += (it1.get_node()->elem) * (pow(x, get_x(it1))) * (pow(y, get_y(it1))) * (pow(z, get_z(it1)));
+		}
+		return res;
+	}
+
+	friend bool operator==(Polinom<T>& a, Polinom<T>& b) {
 		bool res = true;
 		for (auto it1 = a.begin(), it2 = b.begin(); it1 != a.end(), it2 != b.end(); it1++, it2++) {
 			if ((it1.get_node()->elem != it2.get_node()->elem) || (get_x(it1) != get_x(it2)) || (get_y(it1) != get_y(it2)) || (get_z(it1) != get_z(it2))) {
@@ -194,173 +214,65 @@ public:
 		return res;
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	friend Polinom integ_x(Polinom& a) {
+	Polinom diff(char a) {
+		Polinom res;
+		size_t tmp1 = 0;
+		size_t tmp2 = 0;
+		auto res_it = res.begin();
+		for (auto it1 = this->begin(); it1 != this->end(); it1++) {
+			switch (a) {
+			case 'x':
+				tmp1 = get_x(it1);
+				tmp2 = (it1.get_node()->degree) - 100;
+				break;
+			case 'y':
+				tmp1 = get_y(it1);
+				tmp2 = (it1.get_node()->degree) - 10;
+				break;
+			case 'z':
+				tmp1 = get_z(it1);
+				tmp2 = (it1.get_node()->degree) - 1;
+			}
+			res.insert_after(res_it, it1.get_node()->elem * tmp1, tmp2);
+			res_it++;
+		}
+		Node* tmp = res.first;
+		res.first = res.first->next;
+		delete tmp;
+		res.remove_null_elem();
+		return res;
+	}
+
+	Polinom integ(char a) {
+		Polinom res;
+		double tmp1;
+		size_t tmp2;
+		auto res_it = res.begin();
+		for (auto it1 = this->begin(); it1 != this->end(); it1++) {
+			switch (a) {
+			case 'x':
+				tmp1 = 1.0 / (get_x(it1) + 1);
+				tmp2 = (it1.get_node()->degree) + 100;
+				break;
+			case 'y':
+				tmp1 = 1.0 / (get_y(it1) + 1);
+				tmp2 = (it1.get_node()->degree) + 10;
+				break;
+			case 'z':
+				tmp1 = 1.0 / (get_z(it1) + 1);
+				tmp2 = (it1.get_node()->degree) + 1;
+			}
+			res.insert_after(res_it, it1.get_node()->elem * tmp1, tmp2);
+			res_it++;
+		}
+		Node* tmp = res.first;
+		res.first = res.first->next;
+		delete tmp;
+		res.remove_null_elem();
+		return res;
+	}
+  
+  	friend Polinom integ_x(Polinom& a) {
 		Polinom res;
 		double tmp1;
 		size_t tmp2;
@@ -506,7 +418,5 @@ public:
 		res.remove_null_elem();
 		return res;
 	}
-
-
-
+  
 };
