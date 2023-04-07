@@ -183,6 +183,38 @@ public:
 		return res;
 	}
 
+	friend Polinom operator*(Polinom a, T c) {
+		if (c == 0) {
+			Polinom res;
+			Node* tmp = res.first;
+			res.first = res.first->next;
+			delete tmp;
+			res.size--;
+			return res;
+		}
+		Polinom res = std::move(a);
+		for (auto it1 = res.begin(); it1 != res.end(); it1++) {
+			it1.get_node()->elem *= c;
+		}
+		return res;
+	}
+
+	friend Polinom operator*(T c, Polinom a) {
+
+		return a * c;
+	}
+
+	friend Polinom operator/(Polinom a, T c) {
+		if (c == 0) {
+			throw std::out_of_range("Division by zero!");
+		}
+		Polinom res = std::move(a);
+		for (auto it1 = res.begin(); it1 != res.end(); it1++) {
+			it1.get_node()->elem /= c;
+		}
+		return res;
+	}
+
 	size_t pow(size_t b, size_t e) {
 		size_t v = 1;
 		while (e != 0) {
