@@ -21,6 +21,15 @@ public:
 
 	Polinom(Node* a):list(a){}
 
+	Polinom(double a):list(a) {};
+
+	void add_after_null_node(double a) {
+		Node* tmp = first;
+		first->next = new Node(a);
+		first = first->next;
+		delete tmp;
+	}
+
 	friend size_t get_x(iterator num) { return num.get_node()->degree / 100; }
 
 	friend size_t get_y(iterator num) { return (num.get_node()->degree / 10) % 10; }
@@ -174,38 +183,6 @@ public:
 		return res;
 	}
 
-	friend Polinom operator*(Polinom a, T c) {
-		if (c == 0) {
-			Polinom res;
-			Node* tmp = res.first;
-			res.first = res.first->next;
-			delete tmp;
-			res.size--;
-			return res;
-		}
-		Polinom res = std::move(a);
-		for (auto it1 = res.begin(); it1 != res.end(); it1++) {
-			it1.get_node()->elem *= c;
-		}
-		return res;
-	}
-
-	friend Polinom operator*(T c, Polinom a) {
-
-		return a * c;
-	}
-
-	friend Polinom operator/(Polinom a, T c) {
-		if (c == 0) {
-			throw std::out_of_range("Division by zero!");
-		}
-		Polinom res = std::move(a);
-		for (auto it1 = res.begin(); it1 != res.end(); it1++) {
-			it1.get_node()->elem /= c;
-		}
-		return res;
-	}
-
 	size_t pow(size_t b, size_t e) {
 		size_t v = 1;
 		while (e != 0) {
@@ -294,5 +271,152 @@ public:
 		res.remove_null_elem();
 		return res;
 	}
+  
+  	friend Polinom integ_x(Polinom& a) {
+		Polinom res;
+		double tmp1;
+		size_t tmp2;
+		auto res_it = res.begin();
+		for (auto it = a.begin(); it != a.end(); it++) {
+			tmp1 = 1.0 / (get_x(it) + 1);
+			tmp2 = (it.get_node()->degree) + 100;
+			if (tmp2 / 100 == 0) {
+				throw std::out_of_range("Degree very big");
+			}
+			res.insert_after(res_it, it.get_node()->elem * tmp1, tmp2);
+			res_it++;
+		}
+		Node* tmp = res.first;
+		res.first = res.first->next;
+		delete tmp;
+		res.sort();
+		res.remove_equal_degrees();
+		res.remove_null_elem();
+		return res;
+	}
 
+	friend Polinom integ_y(Polinom& a) {
+		Polinom res;
+		double tmp1;
+		size_t tmp2;
+		auto res_it = res.begin();
+		for (auto it = a.begin(); it != a.end(); it++) {
+			tmp1 = 1.0 / (get_x(it) + 1);
+			tmp2 = (it.get_node()->degree) + 10;
+			if ((tmp2 / 10) % 10 == 0) {
+				throw std::out_of_range("Degree very big");
+			}
+			res.insert_after(res_it, it.get_node()->elem * tmp1, tmp2);
+			res_it++;
+		}
+		Node* tmp = res.first;
+		res.first = res.first->next;
+		delete tmp;
+		res.sort();
+		res.remove_equal_degrees();
+		res.remove_null_elem();
+		return res;
+	}
+
+	friend Polinom integ_z(Polinom& a) {
+		Polinom res;
+		double tmp1;
+		size_t tmp2;
+		auto res_it = res.begin();
+		for (auto it = a.begin(); it != a.end(); it++) {
+			tmp1 = 1.0 / (get_x(it) + 1);
+			tmp2 = (it.get_node()->degree) + 1;
+			if (tmp2 % 10 == 0) {
+				throw std::out_of_range("Degree very big");
+			}
+			res.insert_after(res_it, it.get_node()->elem * tmp1, tmp2);
+			res_it++;
+		}
+		Node* tmp = res.first;
+		res.first = res.first->next;
+		delete tmp;
+		res.sort();
+		res.remove_equal_degrees();
+		res.remove_null_elem();
+		return res;
+	}
+
+	friend Polinom diff_x(Polinom& a) {
+		Polinom res;
+		size_t tmp1 = 0;
+		size_t tmp2 = 0;
+		auto res_it = res.begin();
+		for (auto it = a.begin(); it != a.end(); it++) {
+			tmp1 = get_x(it);
+			tmp2 = (it.get_node()->degree) - 100;
+			if (tmp1 == 0) {
+				res.insert_after(res_it, 0, 0);
+				res_it++;
+			}
+			else {
+				res.insert_after(res_it, it.get_node()->elem * tmp1, tmp2);
+				res_it++;
+			}
+		}
+		Node* tmp = res.first;
+		res.first = res.first->next;
+		delete tmp;
+		res.sort();
+		res.remove_equal_degrees();
+		res.remove_null_elem();
+		return res;
+	}
+
+	friend Polinom diff_y(Polinom& a) {
+		Polinom res;
+		size_t tmp1 = 0;
+		size_t tmp2 = 0;
+		auto res_it = res.begin();
+		for (auto it = a.begin(); it != a.end(); it++) {
+			tmp1 = get_y(it);
+			tmp2 = (it.get_node()->degree) - 10;
+			if (tmp1 == 0) {
+				res.insert_after(res_it, 0, 0);
+				res_it++;
+			}
+			else {
+				res.insert_after(res_it, it.get_node()->elem * tmp1, tmp2);
+				res_it++;
+			}
+		}
+		Node* tmp = res.first;
+		res.first = res.first->next;
+		delete tmp;
+		res.sort();
+		res.remove_equal_degrees();
+		res.remove_null_elem();
+		return res;
+	}
+
+	friend Polinom diff_z(Polinom& a) {
+		Polinom res;
+		size_t tmp1 = 0;
+		size_t tmp2 = 0;
+		auto res_it = res.begin();
+		for (auto it = a.begin(); it != a.end(); it++) {
+			tmp1 = get_z(it);
+			tmp2 = (it.get_node()->degree) - 1;
+			if (tmp1 == 0) {
+				res.insert_after(res_it, 0, 0);
+				res_it++;
+			}
+			else {
+				res.insert_after(res_it, it.get_node()->elem * tmp1, tmp2);
+				res_it++;
+			}
+		}
+		Node* tmp = res.first;
+		res.first = res.first->next;
+		delete tmp;
+		res.sort();
+		res.remove_equal_degrees();
+		res.remove_null_elem();
+		return res;
+	}
+  
 };
