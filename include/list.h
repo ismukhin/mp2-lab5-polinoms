@@ -27,7 +27,7 @@ public:
 	};
 
 	Node* first = nullptr;
-	size_t size;
+	size_t size = 0;
 
 	class iterator {
 
@@ -88,6 +88,11 @@ public:
 		nd = nullptr;
 		
 	};
+
+	list(double a) {
+		first = new Node(a);
+		size = 1;
+	}
 
 	explicit list(int count, std::initializer_list<T> init) {
 		if (count <= 0)
