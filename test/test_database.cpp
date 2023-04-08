@@ -53,17 +53,11 @@ TEST(database, cant_pop_empty_SortVectorTable) {
 	ASSERT_ANY_THROW(svt.remove(1));
 }
 
-<<<<<<< Updated upstream
-//TEST(database, can_create_RBTree) {
-//	ASSERT_NO_THROW(RedBlackTree<int, Polinom<int>> tree);
-//}
-
-=======
 TEST(database, can_create_RBTree) {
 	using MyType = RedBlackTree<int, Polinom<int>>;
 	ASSERT_NO_THROW(MyType tree);
 }
->>>>>>> Stashed changes
+
 TEST(database, can_push_RBTree) {
 	RedBlackTree<int, Polinom<int>> tree;
 
@@ -75,6 +69,52 @@ TEST(database, can_push_RBTree) {
 	Polinom<int> a(ab);
 
 	ASSERT_NO_THROW(tree.insert(1, a));
+}
+
+TEST(database, work_correctly_RBTree_1) {
+	RedBlackTree<int, int> tree;
+
+	tree.insert(1, 10);
+	tree.insert(3, 5);
+	tree.insert(7, 3);
+	tree.insert(11, 15);
+	tree.insert(-3, 12);
+	tree.insert(-5, 20);
+
+	ASSERT_NO_THROW(tree.remove(3));
+}
+
+TEST(database, work_correctly_RBTree_2) {
+	RedBlackTree<int, int> tree;
+
+	tree.insert(1, 5);
+	tree.insert(3, 10);
+	tree.insert(7, 15);
+
+	ASSERT_NO_THROW(tree.insert(11, 3));
+}
+
+TEST(database, work_correctly_RBTree_3) {
+	RedBlackTree<int, int> tree;
+
+	tree.insert(1, 10);
+	tree.insert(3, 5);
+	tree.insert(7, 11);
+	tree.insert(11, 7);
+
+	ASSERT_NO_THROW(tree.insert(-3, 12));
+}
+
+TEST(database, work_correctly_RBTree_4) {
+	RedBlackTree<int, int> tree;
+
+	tree.insert(1, 10);
+	tree.insert(3, 5);
+	tree.insert(7, 11);
+	tree.insert(11, 7);
+	tree.insert(-3, 12);
+
+	ASSERT_NO_THROW(tree.remove(3));
 }
 
 TEST(database, can_pop_no_empty_RBTree) {
@@ -100,13 +140,7 @@ TEST(database, can_pop_no_empty_RBTree) {
 
 	ASSERT_NO_THROW(tree.remove(1));
 }
-<<<<<<< Updated upstream
 
-//TEST(database, cant_pop_empty_RBTree) {
-//	RedBlackTree<int, Polinom<int>> tree;
-//	ASSERT_ANY_THROW(svt.remove(1));
-//}
-=======
 TEST(database, cant_pop_empty_RBTree) {
 	RedBlackTree<int, Polinom<int>> tree;
 	ASSERT_ANY_THROW(tree.remove(1));
@@ -155,4 +189,3 @@ TEST(database, cant_pop_empty_HashTableChain) {
 	HashTableChain<Polinom<int>> table(1);
 	ASSERT_ANY_THROW(table.remove(1));
 }
->>>>>>> Stashed changes
