@@ -27,7 +27,7 @@ public:
 	};
 
 	Node* first = nullptr;
-	size_t size;
+	size_t size = 0;
 
 	class iterator {
 
@@ -88,6 +88,17 @@ public:
 		nd = nullptr;
 		
 	};
+
+	list(double a) {
+		if (a == 0.0) {
+			first = nullptr;
+			size = 0;
+		}
+		else {
+			first = new Node(a);
+			size = 1;
+		}
+	}
 
 	explicit list(int count, std::initializer_list<T> init) {
 		if (count <= 0)
@@ -159,13 +170,30 @@ public:
 	};
 
 	list& operator=(const list& l) {
-		if (this == &l)
+		Node* lptr = l.first;
+		if (!lptr) {
+			first = nullptr;
+			this->size = 0;
 			return *this;
-		list res(l);
-		this->clear();
-		this->first = res.first;
+		}
+			
+		first = new Node(lptr->elem, lptr->degree);
+		lptr = lptr->next;
+		Node* tmp = first;
+		while (lptr) {
+			tmp->next = new Node(lptr->elem, lptr->degree);
+			lptr = lptr->next;
+			tmp = tmp->next;
+		}
 		this->size = l.size;
 		return *this;
+		//if (this == &l)
+		//	return *this;
+		//list res(l);
+		//this->clear();
+		//this->first = res.first;
+		//this->size = l.size;
+		//return *this;
 	};
 
 	list& operator=(list&& l) {
