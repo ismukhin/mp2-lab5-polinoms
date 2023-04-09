@@ -116,3 +116,12 @@ TEST(HashTable_OpAdd, can_find_value_by_key) {
 		EXPECT_EQ(tbl[exmpls[i]], i);
 	}
 }
+
+//TEST(HashTable_OpAdd, wtf) {
+//	HashTable_OpAdd<int> tbl;
+//
+//	tbl.insert("a", 1);
+//	tbl.insert("b", 2);
+//	tbl.insert("c", 3);
+//	tbl.insert("A", 4);
+//}

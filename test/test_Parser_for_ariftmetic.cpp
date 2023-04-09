@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "Parser_for_ariftmetic.h"
+#include "Parser_for_polinom.h"
 
 class parser_with_param_correct_input : public ::testing::TestWithParam<std::pair<std::string, std::vector<std::string>>> {
 
@@ -17,34 +18,165 @@ class parser_with_param_incorrect_input_of_sentence : public ::testing::TestWith
 
 };
 
-TEST(Parser_for_arithmetic, smth) {
+TEST(pars, smth) {
+	HashTable_OpAdd<Polinom<double>> polinoms;
+	std::vector<Polinom<double>> res;
+	std::vector<std::pair<double, size_t>> init;
+
+	init.push_back(std::make_pair(1.0, 600));
+	polinoms.insert("a", Polinom<double>(init));
+	init.clear();
+
+	init.push_back(std::make_pair(1.0, 60));
+	polinoms.insert("b", Polinom<double>(init));
+	init.clear();
+
+	init.push_back(std::make_pair(1.0, 6));
+	polinoms.insert("c", Polinom<double>(init));
+	init.clear();
+
+	init.push_back(std::make_pair(1.0, 600));
+	init.push_back(std::make_pair(1.0, 60));
+	init.push_back(std::make_pair(1.0, 6));
+	polinoms.insert("abc", Polinom<double>(init));
+	init.clear();
 	Parser_for_arithmetic a;
-	std::vector<std::pair<double, size_t>> v1;
-	std::vector<std::pair<double, size_t>> v2;
-	v1.push_back(std::make_pair(1, 200));
-	v2.push_back(std::make_pair(1, 10));
-	Polinom<double> a1(v1);
-	Polinom<double> a2(v2);
-	std::map<std::string, Polinom<double>> tab{ {"a", a1}, {"b", a2}};
-	a.init("-a + b");
+	a.init("0*a + 0*b + 0*c + 0*abc");
 	a.correctly_input_parenthless();
-	if (a.parse()) {
-		for (int i = 0; i < a.lex.size(); i++) {
-			std::cout << "[ " << a.lex[i].data << " ]";
-		}
-		std::cout << std::endl;
-	}
-	else {
-		std::cout << "Error" << std::endl;
-	}
+	std::cout << a.parse() << std::endl;
 	parse_on_reverse_poland(a.lex, a.rev_pol);
-	for (int i = 0; i < a.rev_pol.size(); i++) {
-		std::cout << "[ " << a.rev_pol[i].data << " ]";
-	}
-	std::cout << std::endl;
-	std::cout << a.calculate(tab) << std::endl;
-	
+	std::cout << a.calculate(polinoms) << std::endl;
 }
+
+class two_parsers_all_way_to_calculate_sentence_1 : public ::testing::TestWithParam<std::pair<std::string, int>> {
+public:
+	HashTable_OpAdd<Polinom<double>> polinoms;
+	std::vector<Polinom<double>> res;
+	two_parsers_all_way_to_calculate_sentence_1() {
+		std::vector<std::pair<double, size_t>> init;
+		init.push_back(std::make_pair(1.0, 200));
+		polinoms.insert("a", Polinom<double>(init));
+		init.clear();
+
+		init.push_back(std::make_pair(2.0, 2));
+		polinoms.insert("b", Polinom<double>(init));
+		init.clear();
+
+		init.push_back(std::make_pair(3.0, 20));
+		polinoms.insert("c", Polinom<double>(init));
+		init.clear();
+
+		init.push_back(std::make_pair(2.0, 222));
+		init.push_back(std::make_pair(3.0, 222));
+		init.push_back(std::make_pair(4.0, 331));
+		polinoms.insert("AA", Polinom<double>(init));
+		init.clear();
+
+		init.push_back(std::make_pair(1.0, 200)); //a+b+c
+		init.push_back(std::make_pair(2.0, 2));
+		init.push_back(std::make_pair(3.0, 20));
+		res.push_back(Polinom<double>(init));
+		init.clear();
+
+		init.push_back(std::make_pair(12.0, 444)); //AA*a*b*c
+		init.push_back(std::make_pair(18.0, 444));
+		init.push_back(std::make_pair(24.0, 553));
+		res.push_back(Polinom<double>(init));
+		init.clear();
+
+		res.push_back(Polinom<double>(0.0)); //a - a
+
+		init.push_back(std::make_pair(-1.0, 222)); //AA - a*b*c
+		init.push_back(std::make_pair(4, 331));
+		res.push_back(Polinom<double>(init));
+		init.clear();
+
+		init.push_back(std::make_pair(5.0, 222)); //AA - a - b - c
+		init.push_back(std::make_pair(4, 331));
+		init.push_back(std::make_pair(-1.0, 200));
+		init.push_back(std::make_pair(-2.0, 2));
+		init.push_back(std::make_pair(-3.0, 20));
+		res.push_back(Polinom<double>(init));
+		init.clear();
+	}
+};
+
+class two_parsers_all_way_to_calculate_sentence_2 : public ::testing::TestWithParam<std::pair<std::string, int>> {
+public:
+	HashTable_OpAdd<Polinom<double>> polinoms;
+	std::vector<Polinom<double>> res;
+	two_parsers_all_way_to_calculate_sentence_2() {
+		std::vector<std::pair<double, size_t>> init;
+
+		init.push_back(std::make_pair(1.0, 600));
+		polinoms.insert("a", Polinom<double>(init));
+		init.clear();
+
+		init.push_back(std::make_pair(1.0, 60));
+		polinoms.insert("b", Polinom<double>(init));
+		init.clear();
+
+		init.push_back(std::make_pair(1.0, 6));
+		polinoms.insert("c", Polinom<double>(init));
+		init.clear();
+
+		init.push_back(std::make_pair(1.0, 600));
+		init.push_back(std::make_pair(1.0, 60));
+		init.push_back(std::make_pair(1.0, 6));
+		polinoms.insert("abc", Polinom<double>(init));
+		init.clear();
+
+		init.push_back(std::make_pair(1.0, 333));
+		polinoms.insert("B", Polinom<double>(init));
+		init.clear();
+
+		init.push_back(std::make_pair(1.0, 111));
+		init.push_back(std::make_pair(1.0, 211));
+		init.push_back(std::make_pair(1.0, 121));
+		init.push_back(std::make_pair(1.0, 112));
+		polinoms.insert("C", Polinom<double>(init));
+		init.clear();
+
+		res.push_back(Polinom<double>(0.0)); // abc - (a + b + c)
+
+		init.push_back(std::make_pair(1.0, 933)); // B*abc
+		init.push_back(std::make_pair(1.0, 393));
+		init.push_back(std::make_pair(1.0, 339));
+		res.push_back(Polinom<double>(init));
+		init.clear();
+
+		init.push_back(std::make_pair(1.0, 711)); // C*abc
+		init.push_back(std::make_pair(1.0, 171));
+		init.push_back(std::make_pair(1.0, 117));
+		init.push_back(std::make_pair(1.0, 811));
+		init.push_back(std::make_pair(1.0, 271));
+		init.push_back(std::make_pair(1.0, 217));
+		init.push_back(std::make_pair(1.0, 721));
+		init.push_back(std::make_pair(1.0, 181));
+		init.push_back(std::make_pair(1.0, 127));
+		init.push_back(std::make_pair(1.0, 712));
+		init.push_back(std::make_pair(1.0, 172));
+		init.push_back(std::make_pair(1.0, 118));
+		res.push_back(Polinom<double>(init));
+		init.clear();
+
+		init.push_back(std::make_pair(1.0, 600)); // 2*(a+b+c) - abc
+		init.push_back(std::make_pair(1.0, 60));
+		init.push_back(std::make_pair(1.0, 6));
+		res.push_back(Polinom<double>(init));
+		init.clear();
+
+		res.push_back(Polinom<double>(0.0)); // 2*a + 2*b + 2*c - 4*0.5(a + b + c)
+
+		init.push_back(std::make_pair(-1.0, 600)); // 2*a + 2*b + 2*c - 0.5*(4*a + 4*b + 4*c) - abc
+		init.push_back(std::make_pair(-1.0, 60));
+		init.push_back(std::make_pair(-1.0, 6));
+		res.push_back(Polinom<double>(init));
+		init.clear();
+
+		res.push_back(Polinom<double>(0.0)); // 0*a + 0*b + 0*c + 0*B + 0*abc
+	}
+};
 
 TEST_P(parser_with_param_correct_input, can_parse_correct_sentence) {
 	auto val = GetParam();
@@ -104,4 +236,37 @@ TEST_P(parser_with_param_incorrect_input_of_sentence, cant_parse_incorrect_sente
 
 INSTANTIATE_TEST_SUITE_P(parsing_tests, parser_with_param_incorrect_input_of_sentence,
 	testing::Values("A +","a(bc)", "A + B*", "1A", "1 * 1 * al -", "f + -", "H - 6**", "A - --9*6*Y", "", "2 * 2- + J", "I + LOVE + C++")
+);
+
+TEST_P(two_parsers_all_way_to_calculate_sentence_1, can_correctly_calculate) {
+	std::string sent = GetParam().first;
+	int num = GetParam().second;
+	Parser_for_arithmetic a;
+	a.init(sent);
+	a.correctly_input_parenthless();
+	a.parse();
+	parse_on_reverse_poland(a.lex, a.rev_pol);
+	EXPECT_EQ(true, res[num] == a.calculate(polinoms));
+}
+
+INSTANTIATE_TEST_SUITE_P(calculate_tests, two_parsers_all_way_to_calculate_sentence_1, 
+	testing::Values(std::make_pair("a+b+c", 0), std::make_pair("AA*a*b*c", 1), std::make_pair("a - a", 2),
+					std::make_pair("AA - a*b*c", 3), std::make_pair("AA - a - b - c", 4))
+);
+
+TEST_P(two_parsers_all_way_to_calculate_sentence_2, can_correctly_calculate) {
+	std::string sent = GetParam().first;
+	int num = GetParam().second;
+	Parser_for_arithmetic a;
+	a.init(sent);
+	a.correctly_input_parenthless();
+	a.parse();
+	parse_on_reverse_poland(a.lex, a.rev_pol);
+	EXPECT_EQ(true, res[num] == a.calculate(polinoms));
+}
+
+INSTANTIATE_TEST_SUITE_P(calculate_tests, two_parsers_all_way_to_calculate_sentence_2,
+	testing::Values(std::make_pair("abc - (a + b + c)", 0), std::make_pair("B*abc", 1), std::make_pair("C*abc", 2),
+					std::make_pair("2*(a + b + c) - abc", 3), std::make_pair("2*a + 2*b + 2*c - 0.5*(4*a + 4*b + 4*c)", 4),
+					std::make_pair("2*a + 2*b + 2*c - 0.5*(4*a + 4*b + 4*c) - abc", 5), std::make_pair("0*a + 0*b + 0*c + 0*B + 0*abc", 6))
 );

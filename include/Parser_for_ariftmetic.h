@@ -1,4 +1,6 @@
+#pragma once
 #include "polinoms.h"
+#include "open_address_hash_table.h"
 #include <map>
 #include <vector>
 #include <string>
@@ -328,7 +330,7 @@ public:
 				}
 				Polinom<double> tmp2_(st.top());
 				st.pop();
-				st.push(tmp1_ - tmp2_);
+				st.push(tmp2_ - tmp1_);
 			}
 			else if (rev_pol[i].data == "*") {
 				Polinom<double> tmp1_(st.top());
@@ -380,6 +382,88 @@ public:
 				}
 			}
 			
+		}
+		return st.top();
+	}
+
+	Polinom<double> calculate(HashTable_OpAdd<Polinom<double>>& table) {
+		Polinom<double> tmp1_;
+		Polinom<double> tmp2_;
+		std::stack<Polinom<double>> st;
+		for (int i = 0; i < rev_pol.size(); i++) {
+			if (rev_pol[i].number == true && (rev_pol[i].data != "+" && rev_pol[i].data != "*" && rev_pol[i].data != "-" && rev_pol[i].data != "integ_x" && rev_pol[i].data != "integ_y" && rev_pol[i].data != "integ_z" && rev_pol[i].data != "diff_x" && rev_pol[i].data != "diff_y" && rev_pol[i].data != "diff_z")) {
+				st.push(Polinom<double>(std::stod(rev_pol[i].data)));
+			}
+			else if (rev_pol[i].data == "+") {
+				Polinom<double> tmp1_(st.top());
+				st.pop();
+				if (st.empty()) {
+					throw std::out_of_range("");
+				}
+				Polinom<double> tmp2_(st.top());
+				st.pop();
+				st.push(tmp1_ + tmp2_);
+			}
+			else if (rev_pol[i].data == "-") {
+				Polinom<double> tmp1_(st.top());
+				st.pop();
+				if (st.empty()) {
+					throw std::out_of_range("");
+				}
+				Polinom<double> tmp2_(st.top());
+				st.pop();
+				st.push(tmp2_ - tmp1_);
+			}
+			else if (rev_pol[i].data == "*") {
+				Polinom<double> tmp1_(st.top());
+				st.pop();
+				if (st.empty()) {
+					throw std::out_of_range("");
+				}
+				Polinom<double> tmp2_(st.top());
+				st.pop();
+				st.push(tmp1_ * tmp2_);
+			}
+			else if (rev_pol[i].data == "integ_x") {
+				Polinom<double> tmp1_(st.top());
+				st.pop();
+				st.push(integ_x(tmp1_));
+			}
+			else if (rev_pol[i].data == "integ_y") {
+				Polinom<double> tmp1_(st.top());
+				st.pop();
+				st.push(integ_y(tmp1_));
+			}
+			else if (rev_pol[i].data == "integ_z") {
+				Polinom<double> tmp1_(st.top());
+				st.pop();
+				st.push(integ_z(tmp1_));
+			}
+			else if (rev_pol[i].data == "diff_x") {
+				Polinom<double> tmp1_(st.top());
+				st.pop();
+				st.push(diff_x(tmp1_));
+			}
+			else if (rev_pol[i].data == "diff_y") {
+				Polinom<double> tmp1_(st.top());
+				st.pop();
+				st.push(diff_y(tmp1_));
+			}
+			else if (rev_pol[i].data == "diff_z") {
+				Polinom<double> tmp1_(st.top());
+				st.pop();
+				st.push(diff_z(tmp1_));
+			}
+			else if (rev_pol[i].number == false) {
+				if (rev_pol[i].data[0] == '-') {
+					std::string copy(rev_pol[i].data.erase(0, 1));
+					st.push(-1 * table[copy]);
+				}
+				else {
+					st.push(table[rev_pol[i].data]);
+				}
+			}
+
 		}
 		return st.top();
 	}
