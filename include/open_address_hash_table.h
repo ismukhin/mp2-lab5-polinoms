@@ -1,3 +1,4 @@
+#pragma once
 #include <vector>
 #include <string>
 #include <cmath>
@@ -8,7 +9,7 @@ class HashTable_OpAdd {
 	struct Cell {
 
 		std::string key = "";
-		V val;
+		V val = V();
 		bool is_del = false;
 
 		Cell() {
@@ -141,7 +142,7 @@ public:
 				throw std::out_of_range("Table hasn't this key");
 			}
 			else if (data[num_of_cell].key == key_) {
-				data[num_of_cell].val = NULL;
+				data[num_of_cell].val = V();
 				data[num_of_cell].key = "";
 				data[num_of_cell].was_del();
 				count_of_busy_cells--;

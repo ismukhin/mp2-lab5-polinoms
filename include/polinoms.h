@@ -1,3 +1,4 @@
+#pragma once
 #include "list.h"
 #include <iostream>
 #include <vector>
@@ -17,6 +18,10 @@ public:
 		this->sort();
 		this->remove_equal_degrees();
 		this->remove_null_elem();
+		this->size = 0;
+		for (auto it = this->begin(); it != this->end(); it++) {
+			size++;
+		}
 	}
 
 	Polinom(Node* a):list(a){}
@@ -45,8 +50,13 @@ public:
 	};
 
 	friend std::ostream& operator<<(std::ostream& ostr, Polinom& pol) {
-		for (auto it1 = pol.begin(); it1 != pol.end(); it1++) {
-			ostr << it1.get_node()->elem << "x^" << get_x(it1) << "y^" << get_y(it1) << "z^" << get_z(it1) << " ";
+		if (pol.first == nullptr) {
+			ostr << "0";
+		}
+		else {
+			for (auto it1 = pol.begin(); it1 != pol.end(); it1++) {
+				ostr << it1.get_node()->elem << "x^" << get_x(it1) << "y^" << get_y(it1) << "z^" << get_z(it1) << " ";
+			}
 		}
 		return ostr;
 	}
@@ -108,36 +118,40 @@ public:
 
 	void remove_null_elem() {
 		auto tmp = this->begin();
-		auto it1 = ++this->begin();
-		while (it1.get_node() != nullptr) {
-			if (it1.get_node()->elem == 0) {
-				it1 = this->erase_after(tmp);
-				tmp++;
+		if (tmp != nullptr) {
+			auto it1 = ++this->begin();
+			while (it1.get_node() != nullptr) {
+				if (it1.get_node()->elem == 0) {
+					it1 = this->erase_after(tmp);
+					//tmp++;
+				}
+				else {
+					it1++;
+					tmp++;
+				}
 			}
-			else {
-				it1++;
-				tmp++;
+			if (this->begin().get_node()->elem == 0) {
+				Node* tmp1 = this->begin().get_node();
+				this->first = this->begin().get_node()->next;
+				delete tmp1;
+				size--;
 			}
-		}
-		if (this->begin().get_node()->elem == 0) {
-			Node* tmp1 = this->begin().get_node();
-			this->first = this->begin().get_node()->next;
-			delete tmp1;
-			size--;
 		}
 	}
 
 	void remove_equal_degrees() {
 		auto tmp = this->begin();
-		auto it1 = ++this->begin();
-		while (it1.get_node() != nullptr) {
-			if (tmp.get_node()->degree == it1.get_node()->degree) {
-				tmp.get_node()->elem += it1.get_node()->elem;
-				it1 = this->erase_after(tmp);
-			}
-			else {
-				tmp++;
-				it1++;
+		if (tmp != nullptr) {
+			auto it1 = ++this->begin();
+			while (it1.get_node() != nullptr) {
+				if (tmp.get_node()->degree == it1.get_node()->degree) {
+					tmp.get_node()->elem += it1.get_node()->elem;
+					it1 = this->erase_after(tmp);
+				}
+				else {
+					tmp++;
+					it1++;
+				}
 			}
 		}
 	}
@@ -166,6 +180,14 @@ public:
 	}
 
 	friend Polinom operator*(Polinom a, Polinom b) {
+		if (a.first == nullptr || b.first == nullptr) {
+			Polinom res;
+			Node* tmp = res.first;
+			res.first = nullptr;
+			delete tmp;
+			res.size--;
+			return res;
+		}
 		Polinom res;
 		auto res_it = res.begin();
 		for (auto it1 = a.begin(); it1 != a.end(); it1++) {
@@ -227,8 +249,8 @@ public:
 		return v;
 	}
 
-	size_t in_point(size_t x, size_t y, size_t z) {
-		size_t res = 0;
+	double in_point(double x, double y, double z) {
+		double res = 0.0;
 		for (auto it1 = this->begin(); it1 != this->end(); it1++) {
 			res += (it1.get_node()->elem) * (pow(x, get_x(it1))) * (pow(y, get_y(it1))) * (pow(z, get_z(it1)));
 		}
@@ -310,7 +332,7 @@ public:
 		size_t tmp2;
 		auto res_it = res.begin();
 		for (auto it = a.begin(); it != a.end(); it++) {
-			tmp1 = 1.0 / (get_x(it) + 1);
+			tmp1 = 1.0 / (get_x(it) + 1.0);
 			tmp2 = (it.get_node()->degree) + 100;
 			if (tmp2 / 100 == 0) {
 				throw std::out_of_range("Degree very big");
@@ -333,7 +355,7 @@ public:
 		size_t tmp2;
 		auto res_it = res.begin();
 		for (auto it = a.begin(); it != a.end(); it++) {
-			tmp1 = 1.0 / (get_x(it) + 1);
+			tmp1 = 1.0 / (get_y(it) + 1.0);
 			tmp2 = (it.get_node()->degree) + 10;
 			if ((tmp2 / 10) % 10 == 0) {
 				throw std::out_of_range("Degree very big");
@@ -356,7 +378,7 @@ public:
 		size_t tmp2;
 		auto res_it = res.begin();
 		for (auto it = a.begin(); it != a.end(); it++) {
-			tmp1 = 1.0 / (get_x(it) + 1);
+			tmp1 = 1.0 / (get_z(it) + 1.0);
 			tmp2 = (it.get_node()->degree) + 1;
 			if (tmp2 % 10 == 0) {
 				throw std::out_of_range("Degree very big");
