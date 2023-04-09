@@ -41,7 +41,7 @@ public:
 		}
 	}
 
-	V operator[](T key) {
+	V& operator[](T key) {
 		for (int i = 0; i < data.size(); i++) {
 			if (data[i].first == key) {
 				return data[i].second;

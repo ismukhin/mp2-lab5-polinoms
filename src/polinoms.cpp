@@ -21,7 +21,12 @@ int main() {
 	console_states st = console_states::start_position;
 	Parser pol;
 	Parser_for_arithmetic sent;
+
 	HashTable_OpAdd<Polinom<double>> tab1;
+	AVL_tree<std::string, Polinom<double>> tab2;
+	unordered_table<std::string, Polinom<double>> tab3;
+	RedBlackTree<std::string, Polinom<double>> tab4;
+
 	Polinom<double> polinom;
 	std::string choice;
 	//std::string sentence;
@@ -81,8 +86,14 @@ int main() {
 				else {
 					pol.init(sentence);
 					if (pol.correctly_input()) {
+
 						tab1.insert(name, Polinom<double>(0.0));
 						tab1[name] = pol.create_polinom();
+						tab2.insert(name, Polinom<double>(0.0));
+						tab2[name] = pol.create_polinom();
+						tab3.push_back(name, Polinom<double>(0.0));
+						tab3[name] = pol.create_polinom();
+
 						std::cout << tab1 << std::endl;
 						st = console_states::name_polinom;
 						pol.clear();
@@ -227,6 +238,9 @@ int main() {
 			else {
 				try {
 					tab1.erase(name);
+					tab2.erase(name);
+					tab3.erase(name);
+					
 				}
 				catch (std::out_of_range e) {
 					std::cout << e.what() << std::endl;
