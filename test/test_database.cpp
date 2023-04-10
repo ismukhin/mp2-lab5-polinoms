@@ -15,9 +15,7 @@ TEST(database, can_push_SortVectorTable) {
 
 	Polinom<int> a(ab);
 
-	svt.insert(1, a);
-
-	ASSERT_NO_THROW(svt.insert(1, a));
+	ASSERT_NO_THROW(svt.insert("1", a));
 }
 
 TEST(database, get_size_work_correctly_SortVectorTable) {
@@ -29,7 +27,7 @@ TEST(database, get_size_work_correctly_SortVectorTable) {
 	ab.push_back(std::make_pair(3, 599));
 
 	Polinom<int> a(ab);
-	svt.insert(1, a);
+	svt.insert("1", a);
 
 	EXPECT_EQ(1, svt.Vsize());
 }
@@ -43,14 +41,14 @@ TEST(database, can_pop_no_empty_SortVectorTable) {
 	ab.push_back(std::make_pair(3, 599));
 
 	Polinom<int> a(ab);
-	svt.insert(1, a);
+	svt.insert("1", a);
 
-	ASSERT_NO_THROW(svt.remove(1));
+	ASSERT_NO_THROW(svt.remove("1"));
 }
 
 TEST(database, cant_pop_empty_SortVectorTable) {
 	SortVectorTable<int> svt;
-	ASSERT_ANY_THROW(svt.remove(1));
+	ASSERT_ANY_THROW(svt.remove("1"));
 }
 
 TEST(database, can_create_RBTree) {
@@ -74,47 +72,117 @@ TEST(database, can_push_RBTree) {
 TEST(database, work_correctly_RBTree_1) {
 	RedBlackTree<int, int> tree;
 
-	tree.insert(1, 10);
-	tree.insert(3, 5);
+	tree.insert(5, 1);
+	tree.insert(3, 2);
 	tree.insert(7, 3);
-	tree.insert(11, 15);
-	tree.insert(-3, 12);
-	tree.insert(-5, 20);
+	tree.insert(2, 4);
+	tree.insert(4, 5);
+	tree.insert(6, 6);
+	tree.insert(8, 7);
 
-	ASSERT_NO_THROW(tree.remove(3));
+	tree.remove(2);
+	tree.insert(2, 8);
+
+	EXPECT_EQ(tree.get(2), 8);
+	EXPECT_EQ(tree.get(3), 2);
+	EXPECT_EQ(tree.get(4), 5);
+	EXPECT_EQ(tree.get(5), 1);
+	EXPECT_EQ(tree.get(6), 6);
+	EXPECT_EQ(tree.get(7), 3);
+	EXPECT_EQ(tree.get(8), 7);
 }
 
 TEST(database, work_correctly_RBTree_2) {
 	RedBlackTree<int, int> tree;
 
-	tree.insert(1, 5);
-	tree.insert(3, 10);
-	tree.insert(7, 15);
+	tree.insert(7, 1);
+	tree.insert(5, 2);
+	tree.insert(9, 3);
+	tree.insert(3, 4);
+	tree.insert(6, 5);
+	tree.insert(8, 6);
+	tree.insert(10, 7);
 
-	ASSERT_NO_THROW(tree.insert(11, 3));
+	tree.remove(10);
+	tree.insert(10, 8);
+
+	EXPECT_EQ(tree.get(3), 4);
+	EXPECT_EQ(tree.get(5), 2);
+	EXPECT_EQ(tree.get(6), 5);
+	EXPECT_EQ(tree.get(7), 1);
+	EXPECT_EQ(tree.get(8), 6);
+	EXPECT_EQ(tree.get(9), 3);
+	EXPECT_EQ(tree.get(10), 8);
 }
 
 TEST(database, work_correctly_RBTree_3) {
 	RedBlackTree<int, int> tree;
 
-	tree.insert(1, 10);
-	tree.insert(3, 5);
-	tree.insert(7, 11);
-	tree.insert(11, 7);
+	tree.insert(5, 1);
+	tree.insert(3, 2);
+	tree.insert(7, 3);
+	tree.insert(2, 4);
+	tree.insert(4, 5);
+	tree.insert(6, 6);
+	tree.insert(8, 7);
 
-	ASSERT_NO_THROW(tree.insert(-3, 12));
+	tree.remove(2);
+	tree.insert(2, 8);
+	tree.remove(4);
+	tree.insert(4, 9);
+
+	EXPECT_EQ(tree.get(2), 8);
+	EXPECT_EQ(tree.get(3), 2);
+	EXPECT_EQ(tree.get(4), 9);
+	EXPECT_EQ(tree.get(5), 1);
+	EXPECT_EQ(tree.get(6), 6);
+	EXPECT_EQ(tree.get(7), 3);
+	EXPECT_EQ(tree.get(8), 7);
 }
 
 TEST(database, work_correctly_RBTree_4) {
 	RedBlackTree<int, int> tree;
 
-	tree.insert(1, 10);
-	tree.insert(3, 5);
-	tree.insert(7, 11);
-	tree.insert(11, 7);
-	tree.insert(-3, 12);
+	tree.insert(7, 1);
+	tree.insert(5, 2);
+	tree.insert(9, 3);
+	tree.insert(3, 4);
+	tree.insert(6, 5);
+	tree.insert(8, 6);
+	tree.insert(10, 7);
 
-	ASSERT_NO_THROW(tree.remove(3));
+	tree.remove(10);
+	tree.insert(10, 8);
+	tree.remove(8);
+	tree.insert(8, 9);
+
+	EXPECT_EQ(tree.get(3), 4);
+	EXPECT_EQ(tree.get(5), 2);
+	EXPECT_EQ(tree.get(6), 5);
+	EXPECT_EQ(tree.get(7), 1);
+	EXPECT_EQ(tree.get(8), 9);
+	EXPECT_EQ(tree.get(9), 3);
+	EXPECT_EQ(tree.get(10), 8);
+}
+
+TEST(database, work_correctly_RBTree_5) {
+	RedBlackTree<int, int> tree;
+
+	tree.insert(7, 1);
+	tree.insert(5, 2);
+	tree.insert(9, 3);
+	tree.insert(3, 4);
+	tree.insert(6, 5);
+	tree.insert(8, 6);
+	tree.insert(10, 7);
+
+	EXPECT_EQ(tree.get(3), 4);
+	EXPECT_EQ(tree.get(5), 2);
+	EXPECT_EQ(tree.get(6), 5);
+	EXPECT_EQ(tree.get(7), 1);
+	EXPECT_EQ(tree.get(8), 6);
+	EXPECT_EQ(tree.get(9), 3);
+	EXPECT_EQ(tree.get(10), 7);
 }
 
 TEST(database, can_pop_no_empty_RBTree) {
@@ -160,7 +228,7 @@ TEST(database, can_push_HashTableChain) {
 
 	Polinom<int> a(ab);
 
-	ASSERT_NO_THROW(table.insert(1, a));
+	ASSERT_NO_THROW(table.insert("1", a));
 }
 TEST(database, can_pop_no_empty_HashTableChain) {
 	HashTableChain<Polinom<int>> table(2);
@@ -172,7 +240,7 @@ TEST(database, can_pop_no_empty_HashTableChain) {
 
 	Polinom<int> a(ab);
 
-	table.insert(3, a);
+	table.insert("3", a);
 
 	std::vector<std::pair<int, size_t>> abc;
 	abc.push_back(std::make_pair(1, 303));
@@ -181,11 +249,11 @@ TEST(database, can_pop_no_empty_HashTableChain) {
 
 	Polinom<int> b(abc);
 
-	table.insert(7, b);
+	table.insert("7", b);
 
-	ASSERT_NO_THROW(table.remove(3));
+	ASSERT_NO_THROW(table.remove("3"));
 }
 TEST(database, cant_pop_empty_HashTableChain) {
 	HashTableChain<Polinom<int>> table(1);
-	ASSERT_ANY_THROW(table.remove(1));
+	ASSERT_ANY_THROW(table.remove("1"));
 }
