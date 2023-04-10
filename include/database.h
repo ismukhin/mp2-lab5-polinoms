@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <string>
 #include <vector>
 #include <utility>
 #include <algorithm>
@@ -16,10 +17,10 @@ class SortVectorTable {
 
 private:
 
-    std::vector<std::pair<int, Polinom<T>>> data;
+    std::vector<std::pair<std::string, Polinom<T>>> data;
 
-    auto findloc(int key) const {
-        return std::lower_bound(data.begin(), data.end(), key, [](const auto& pair, int key) {return pair.first < key;});
+    auto findloc(std::string key) const {
+        return std::lower_bound(data.begin(), data.end(), key, [](const auto& pair, std::string key) {return pair.first < key;});
     }
 
     size_t size = 0;
@@ -28,13 +29,13 @@ public:
 
     SortVectorTable() {};
 
-    void insert(int key, const Polinom<T>& value) {
+    void insert(std::string key, const Polinom<T>& value) {
         auto it = findloc(key);
         data.insert(it, std::make_pair(key, value));
         ++size;
     }
 
-    void remove(int key) {
+    void remove(std::string key) {
         auto it = findloc(key);
         if (it != data.end()) {
             data.erase(it);
@@ -44,7 +45,7 @@ public:
         }
     }
 
-    Polinom<T> find(int key) const {
+    Polinom<T> find(std::string key) const {
         auto it = findloc(key);
         if (it != data.end()) {
             return it->second;
@@ -342,6 +343,38 @@ public:
     void print() {
         printHelper(root);
     }
+
+    V get(T key) {
+        Node* current = root;
+        while (current != nullptr) {
+            if (key == current->key) {
+                return current->value;
+            }
+            else if (key < current->key) {
+                current = current->left;
+            }
+            else {
+                current = current->right;
+            }
+        }
+        throw("Error");
+    }
+
+    V& search(T key) {
+        Node* current = root;
+        while (current != nullptr) {
+            if (key == current->key) {
+                return current->value;
+            }
+            else if (key < current->key) {
+                current = current->left;
+            }
+            else {
+                current = current->right;
+            }
+        }
+        throw("Error");
+    }
 };
 
 template <typename V>
@@ -350,17 +383,24 @@ class HashTableChain {
 
 private:
 
-    std::vector<std::forward_list<std::pair<int, V>>> table;
+    std::vector<std::forward_list<std::pair<std::string, V>>> table;
 
-    size_t hashFunction(int key) {
-        return key % table.size();
+    size_t hashFunction(std::string& key) {
+        const size_t p = 31;
+        size_t hash_value = 0;
+        size_t p_pow = 1;
+        for (char c : key) {
+            hash_value = (hash_value + (c - 'a' + 1) * p_pow) % table.size();
+            p_pow = (p_pow * p) % table.size();
+        }
+        return hash_value;
     }
 
 public:
 
     HashTableChain(size_t capacity = 128) : table(capacity) {}
 
-    void insert(int key, V& value) {
+    void insert(std::string key, V& value) {
         size_t index = hashFunction(key);
         for (auto& node : table[index]) {
             if (node.first == key) {
@@ -371,7 +411,7 @@ public:
         table[index].push_front(std::make_pair(key, value));
     }
 
-    bool find(int key, V& value) {
+    bool find(std::string key, V& value) {
         size_t index = hashFunction(key);
         for (auto& node : table[index]) {
             if (node.first == key) {
@@ -382,7 +422,7 @@ public:
         return false;
     }
 
-    void remove(int key) {
+    void remove(std::string key) {
         size_t index = hashFunction(key);
         auto& bucket = table[index];
         auto prev = bucket.before_begin();
