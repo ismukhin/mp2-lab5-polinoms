@@ -26,6 +26,8 @@ int main() {
 	AVL_tree<std::string, Polinom<double>> tab2;
 	unordered_table<std::string, Polinom<double>> tab3;
 	RedBlackTree<std::string, Polinom<double>> tab4;
+	SortVectorTable<double> tab5;
+	HashTableChain<Polinom<double>> tab6;
 
 	Polinom<double> polinom;
 	std::string choice;
@@ -65,6 +67,10 @@ int main() {
 		case console_states::name_polinom:
 			std::cout << "Enter name of polinom, if you wanna quit write 'exit()'." << std::endl;
 			std::cin >> name;
+			if (std::find(std::begin(ALPHABET), std::end(ALPHABET), name[0]) == std::end(ALPHABET)) {
+				std::cout << "Try again, name cant be started from non letter symbol" << std::endl;
+				continue;
+			}
 			if (name == "exit()") {
 				st = console_states::start_position;
 				std::cout << "\033[2J\033[1;1H";
@@ -93,6 +99,12 @@ int main() {
 						tab2[name] = pol.create_polinom();
 						tab3.push_back(name, Polinom<double>(0.0));
 						tab3[name] = pol.create_polinom();
+						tab4.insert(name, Polinom<double>(0.0));
+						tab4.search(name) = pol.create_polinom();
+						tab5.insert(name, Polinom<double>(0.0));
+						tab5.find(name) = pol.create_polinom();
+						tab6.insert(name, Polinom<double>(0.0));
+						tab6.find(name) = pol.create_polinom();
 
 						std::cout << tab1 << std::endl;
 						st = console_states::name_polinom;
@@ -145,6 +157,10 @@ int main() {
 			std::cout << "Enter name of polinom: ";
 			std::cin >> name;
 			std::cout << std::endl;
+			if (std::find(std::begin(ALPHABET), std::end(ALPHABET), name[0]) == std::end(ALPHABET)) {
+				std::cout << "Try again, name cant be started from non letter symbol" << std::endl;
+				continue;
+			}
 			try {
 				std::cout << tab1[name] << std::endl;
 				st = console_states::choice_of_operation;
@@ -240,6 +256,9 @@ int main() {
 					tab1.erase(name);
 					tab2.erase(name);
 					tab3.erase(name);
+					tab4.remove(name);
+					tab5.remove(name);
+					tab6.remove(name);
 					
 				}
 				catch (std::out_of_range e) {

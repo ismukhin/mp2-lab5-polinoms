@@ -29,7 +29,7 @@ public:
 
     SortVectorTable() {};
 
-    void insert(std::string key, const Polinom<T>& value) {
+    void insert(std::string key, Polinom<T> value) {
         auto it = findloc(key);
         data.insert(it, std::make_pair(key, value));
         ++size;
@@ -51,7 +51,7 @@ public:
             return it->second;
         }
         else {
-            Polinom<int> tmp;
+            Polinom<T> tmp;
             return tmp;
         }
     }
@@ -357,7 +357,7 @@ public:
                 current = current->right;
             }
         }
-        throw("Error");
+        throw std::out_of_range("Error");
     }
 
     V& search(T key) {
@@ -373,7 +373,7 @@ public:
                 current = current->right;
             }
         }
-        throw("Error");
+        throw std::out_of_range("Error");
     }
 };
 
@@ -411,15 +411,14 @@ public:
         table[index].push_front(std::make_pair(key, value));
     }
 
-    bool find(std::string key, V& value) {
+    V& find(std::string key) {
         size_t index = hashFunction(key);
         for (auto& node : table[index]) {
             if (node.first == key) {
-                value = node.second;
-                return true;
+                return node.second;
             }
         }
-        return false;
+        throw std::out_of_range("Table hasn't this key");
     }
 
     void remove(std::string key) {
@@ -432,6 +431,6 @@ public:
                 return;
             }
         }
-        throw "Error";
+        throw std::out_of_range("Error");
     }
 };
