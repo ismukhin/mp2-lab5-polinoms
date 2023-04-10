@@ -76,7 +76,7 @@ int main() {
 			break;
 		case console_states::enter_polinom:
 			try {
-				std::cout << "Enter polinom: ";
+				std::cout << "Enter polinom:";
 				std::string sentence;
 				std::getline(std::cin, sentence);
 				if (sentence == "exit()") {

@@ -149,6 +149,15 @@ class AVL_tree {
 		t->height = (hl > hr ? hl : hr) + 1;
 	}
 
+	void clearTreeHelper(Node* root){
+		if (root != nullptr) {
+			clearTreeHelper(root->left);
+			clearTreeHelper(root->right);
+			delete root;
+			root = nullptr;
+		}
+	}
+
 public:
 
 	Node* root;
@@ -156,6 +165,10 @@ public:
 	AVL_tree() {
 		root = nullptr;
 	};
+
+	~AVL_tree() {
+		clearTreeHelper(root);
+	}
 
 	void insert(T key_, V value_) {
 		this->root = insert_(key_, value_, this->root);

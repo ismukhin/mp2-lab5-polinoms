@@ -327,6 +327,9 @@ public:
 	}
   
   	friend Polinom integ_x(Polinom& a) {
+		if (a.first == nullptr) {
+			return Polinom(1.0);
+		}
 		Polinom res;
 		double tmp1;
 		size_t tmp2;
@@ -350,6 +353,9 @@ public:
 	}
 
 	friend Polinom integ_y(Polinom& a) {
+		if (a.first == nullptr) {
+			return Polinom(1.0);
+		}
 		Polinom res;
 		double tmp1;
 		size_t tmp2;
@@ -373,6 +379,9 @@ public:
 	}
 
 	friend Polinom integ_z(Polinom& a) {
+		if (a.first == nullptr) {
+			return Polinom(1.0);
+		}
 		Polinom res;
 		double tmp1;
 		size_t tmp2;
@@ -397,6 +406,9 @@ public:
 
 	friend Polinom diff_x(Polinom& a) {
 		Polinom res;
+		if (a.first == nullptr) {
+			return Polinom(0.0);
+		}
 		size_t tmp1 = 0;
 		size_t tmp2 = 0;
 		auto res_it = res.begin();
@@ -423,6 +435,9 @@ public:
 
 	friend Polinom diff_y(Polinom& a) {
 		Polinom res;
+		if (a.first == nullptr) {
+			return Polinom(0.0);
+		}
 		size_t tmp1 = 0;
 		size_t tmp2 = 0;
 		auto res_it = res.begin();
@@ -449,6 +464,9 @@ public:
 
 	friend Polinom diff_z(Polinom& a) {
 		Polinom res;
+		if (a.first == nullptr) {
+			return Polinom(0.0);
+		}
 		size_t tmp1 = 0;
 		size_t tmp2 = 0;
 		auto res_it = res.begin();

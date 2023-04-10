@@ -35,7 +35,7 @@ class HashTable_OpAdd {
 	std::vector<Cell> data;
 	size_t count_of_busy_cells = 0;
 	size_t c = 3;
-	size_t d = 5;
+	size_t d = 0;
 
 public:
 
