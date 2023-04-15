@@ -120,6 +120,7 @@ int main() {
 			}
 			catch (std::out_of_range e) {
 				std::cout << e.what() << std::endl;
+				pol.clear();
 			}
 			break;
 		case console_states::calculating_of_polinoms_sentence:
